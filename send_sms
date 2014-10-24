@@ -1,0 +1,37 @@
+#! /bin/bash
+echo "BEGIN-------------$(date +%D\ \-\ %T)" >> sms.log
+dir=/home/andrew/Work/sms/sms
+
+count=$(ls $dir | wc -l )
+#echo $count
+if [[ $count -gt 0 ]] 
+then
+	dst=$1
+	mess=$2
+	#wget "http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+
+	ls $dir
+
+	find $dir -type f | while read FILENAME; do
+		dst=$(basename $FILENAME)
+		#echo $dst
+		if [[ $dst == 'kartvit.txt' ]]
+		then
+			echo "Зарплата"
+		else
+			mess=$(cat $FILENAME)
+			#echo "$dst - $mess"
+			echo "	http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+#			rm $FILENAME
+			echo "	$dst - OK  - [ $mess ]" >> sms.log
+			#echo "$dst - ERR - [ $mess ]" >> sms.log
+		fi
+	done
+else 
+	echo "no files to send"
+	echo "	no files to send" >> sms.log
+fi
+
+
+echo "END---------------$(date +%D\ \-\ %T)" >> sms.log
+
