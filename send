@@ -1,6 +1,29 @@
 #! /bin/bash
+# send <номер телефона> <текст сообщения>
+
 dst=$1
 mess=$2
-#echo $2
-echo "  http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
 
+#echo "  http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+#echo "http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+#wget "http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" -T 5 -t 1 --quiet -O -
+
+echo "[$(date +%D\ \-\ %T)]----------------------------------------" | tee -a sms.log
+res=$(wget "http://192.168.1.33/send.html" -T 5 -t 1 --quiet -O -)
+
+	#   если пустая строка
+if  [[ -z $res ]]
+then
+	echo $dst | tee -a sms.log
+	echo "Error: can't send sms" | tee -a sms.log 
+	echo "---------------------------------------------------[$(date +%T)]" | tee -a sms.log
+
+	exit 1
+else
+	#
+	echo $dst | tee -a sms.log
+	echo "$res" | tee -a sms.log
+        echo "---------------------------------------------------[$(date +%T)]" | tee -a sms.log
+
+	exit 0
+fi
