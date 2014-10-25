@@ -1,9 +1,14 @@
 #! /bin/bash
-	# убираем пробелы 
-schet=$(echo $* | sed 's/ *//g')
+# search_number <счёт> <путь к справочнику>
+	# номер счёта
+schet=$1
+	# | sed 's/ *//g')
 	# путь к справочнику
-phones=/home/andrew/Work/sms/phones.txt
-	# ищем строку с указанным счётом и выводи номер телефон
-cat $phones | grep $schet | sed -r 's/(.*)-(.*)/\1/'
+#phones=/home/andrew/Work/sms/phones.txt
+phones=$2
+
+	# ищем строку с указанным счётом и выводи номер телефон 
+	# подразумевается, что одному счёту соответствует один номер
+cat $phones | grep -m 1 $schet | sed -r 's/(.*)-(.*)/\1/'
 #| cut -f1 -d '-'
 

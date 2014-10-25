@@ -1,0 +1,6 @@
+#! /bin/bash
+dst=$1
+mess=$2
+#echo $2
+echo "  http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+

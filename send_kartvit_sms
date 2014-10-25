@@ -1,0 +1,34 @@
+#! /bin/bash
+# send_kartvit_sms <путь к фалу с суммами> <путь к справочнику телефонов>
+
+# kartvit=$1
+#phones=$2
+kartvit=/home/andrew/work/sms/sms/kartvit.txt
+phones=/home/andrew/work/sms/phones.txt
+echo "start send..."
+echo "BEGIN-------------$(date +%D\ \-\ %T)" >> sms_kartvit.log
+	# если нужный файл существует
+if [ -f $kartvit ];
+then
+		# получаем список номеров и сумм (каждая строка вида 'номер-сумма' - отдельное сообщение)
+		# перебираем строки и отправляем СМС
+	while read line
+	do
+		arr=($line)
+		dst=${arr[0]}
+		mess=${arr[1]}
+		#echo "http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+		#wget "http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" -T 5 -t 1 --quiet -O -
+		#wget "http://192.168.1.33/send.html" -T 5 -t 1 --quiet -O - || echo "Error: can't send" | tee -a sms_kartvit.log 
+		echo "	$dst - OK" >> sms_kartvit.log
+        done < $(./scan_kartvit $kartvit $phones)
+
+else
+	echo "no file"
+	echo "	no file" >> sms_kartvit.log
+fi
+
+
+echo "END---------------$(date +%D\ \-\ %T)" >> sms_kartvit.log
+rm $kartvit
+echo "Complete!"

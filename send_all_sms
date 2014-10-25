@@ -1,6 +1,6 @@
 #! /bin/bash
 echo "BEGIN-------------$(date +%D\ \-\ %T)" >> sms.log
-dir=/home/andrew/Work/sms/sms
+dir=/home/andrew/work/sms/sms
 
 count=$(ls $dir | wc -l )
 #echo $count
@@ -18,10 +18,11 @@ then
 		if [[ $dst == 'kartvit.txt' ]]
 		then
 			echo "Зарплата"
+			#читаем файл построчно, и для счетов которым есть номер телефона - отправляем СМС
 		else
 			mess=$(cat $FILENAME)
 			#echo "$dst - $mess"
-			echo "	http://192.168.153.4/cgi/WebCGI?1500101=account=apiuser&password=utytpbc&port=1&destination=$dst&content=$mess" --quiet -O -
+			./send $dst "$mess"
 #			rm $FILENAME
 			echo "	$dst - OK  - [ $mess ]" >> sms.log
 			#echo "$dst - ERR - [ $mess ]" >> sms.log

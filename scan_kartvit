@@ -1,0 +1,44 @@
+#! /bin/bash 
+# scan_kartvit <путь к файлу с суммами> <путь к справочнику телефонов>
+
+	# путь к файлу с суммами
+kartvit=$1
+	# путь к справочнику телефонов
+phones=$2
+
+# возвращаем такие строки: phone-summ
+
+#echo $kartvit
+#echo $phones
+
+rm send.tmp
+	# перебираем в цикле строки из файла kartvit
+while read line
+do
+	#echo $line
+
+		# разбмваем строку по словам
+	arr=($line)
+
+		# получаем номер счёта (уже без пробелов)
+	#echo "${arr[0]}${arr[1]}"
+	schet="${arr[0]}${arr[1]}"
+
+		# получаем номер телефона
+	phone=$(./search_number $schet $phones)
+
+		# если есть соответствие
+	if [[ -n $phone ]]
+	then
+			# получаем сумму
+		#echo ${arr[2]}
+		summ=${arr[2]}
+			# нужные данные - телефон и сумма
+		echo "80$phone $summ" >> send.tmp
+	#else
+		#  не найдкн номер
+	#	echo '--------'
+	fi
+ done < $kartvit
+
+echo send.tmp
